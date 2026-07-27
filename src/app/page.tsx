@@ -2,6 +2,9 @@ import Link from "next/link";
 import IgnitionHero from "@/components/ignition-hero";
 import ProductCard from "@/components/product-card";
 import MediaSlot from "@/components/media-slot";
+import CircleButton from "@/components/circle-button";
+import CharButton from "@/components/char-button";
+import Reveal from "@/components/reveal";
 import { getFeaturedProducts } from "@/lib/products";
 import { resolvePublicMedia } from "@/lib/media";
 
@@ -10,43 +13,72 @@ export default async function HomePage() {
 
   return (
     <>
-      <IgnitionHero />
+      <IgnitionHero
+        eyebrow="Lumatree — Modular Lighting"
+        heading={
+          <>
+            Light, shaped
+            <br />
+            like <span className="text-filament">growth.</span>
+          </>
+        }
+        cta={{ label: "View collection", href: "/products" }}
+        description="A modular lighting series built around one idea: soft, diffused light, shown through the contrast it leaves in shadow."
+        rightContent={
+          <ul className="flex flex-col gap-3">
+            <li>
+              <CircleButton href="/features">Features</CircleButton>
+            </li>
+            <li>
+              <CircleButton href="/products">Products</CircleButton>
+            </li>
+            <li>
+              <CircleButton href="/company">Company</CircleButton>
+            </li>
+          </ul>
+        }
+      />
 
-      <section className="mx-auto max-w-3xl px-6 py-28 text-center sm:px-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
-          The idea
-        </p>
-        <p className="text-balance mt-6 font-display text-3xl italic leading-snug sm:text-4xl">
-          Every fixture in the series is built for one thing: soft light,
-          made visible by what it leaves in shadow.
-        </p>
-        <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-canopy/60">
-          No fixture in the Lumatree series aims for brightness. Each one is
-          shaped, gently, to diffuse — so a room reads in gradients of light
-          and shade rather than in a single flat wash.
-        </p>
+      <section className="relative overflow-hidden px-6 py-32 text-center sm:px-10">
+        <div
+          aria-hidden="true"
+          className="glow-blob-soft pointer-events-none absolute left-1/2 top-0 h-[36rem] w-[36rem] -translate-x-1/2 opacity-70"
+        />
+        <Reveal className="relative mx-auto max-w-3xl">
+          <p className="text-balance font-display text-4xl leading-[1.05] text-canopy sm:text-5xl">
+            Every fixture is built for <span className="text-filament">one</span> thing:
+            soft light, made visible by what it leaves in shadow.
+          </p>
+          <p className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-canopy/60">
+            No fixture in the Lumatree series aims for brightness. Each one is
+            shaped, gently, to diffuse — so a room reads in gradients of light
+            and shade rather than a single flat wash.
+          </p>
+        </Reveal>
       </section>
 
       <section className="px-6 py-16 sm:px-10">
         <div className="mx-auto max-w-7xl">
-          <div className="flex items-end justify-between border-b border-canopy/10 pb-6">
-            <h2 className="font-display text-3xl italic">The series</h2>
+          <Reveal className="flex items-end justify-between border-b border-canopy/10 pb-6">
+            <h2 className="font-display text-3xl text-canopy">The series</h2>
             <Link
               href="/products"
-              className="font-mono text-[11px] uppercase tracking-[0.16em] text-canopy/60 transition-colors hover:text-canopy"
+              className="font-sans text-[13px] font-medium text-canopy/60 transition-colors hover:text-canopy"
             >
               View all →
             </Link>
-          </div>
+          </Reveal>
           <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {featured.map((product, i) => (
+              <Reveal key={product.id} delay={i * 0.08}>
+                <ProductCard product={product} />
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-28 sm:px-10 md:grid-cols-2 md:items-center md:gap-16">
+      <Reveal className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-28 sm:px-10 md:grid-cols-2 md:items-center md:gap-16">
         <MediaSlot
           srcImage={resolvePublicMedia("/media/home/craft.jpg")}
           alt="Material detail — blown opal glass and brushed bronze"
@@ -55,42 +87,40 @@ export default async function HomePage() {
           aspectClassName="aspect-[4/3]"
         />
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+          <p className="font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
             Materials
           </p>
-          <h2 className="mt-4 font-display text-3xl italic leading-snug sm:text-4xl">
+          <h2 className="mt-4 font-display text-3xl leading-snug text-canopy sm:text-4xl">
             Opal glass, hand-blown. Bronze, hand-brushed.
           </h2>
-          <p className="mt-5 max-w-md text-sm leading-relaxed text-canopy/60">
+          <p className="mt-5 max-w-md text-base leading-relaxed text-canopy/60">
             Every diffuser is blown, not molded, so the glass keeps a
             thickness that varies by a millimeter or two across its surface —
             enough to break a bulb&apos;s point of light into something
             closer to daylight through a leaf canopy.
           </p>
         </div>
-      </section>
+      </Reveal>
 
-      <section className="border-t border-canopy/10 bg-bark px-6 py-24 text-vellum sm:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
-          <h2 className="max-w-lg font-display text-3xl italic leading-snug sm:text-4xl">
-            See the full series, or bring one into a room you&apos;re
-            already picturing.
+      <section className="relative overflow-hidden bg-canopy px-6 py-28 text-vellum sm:px-10">
+        <div
+          aria-hidden="true"
+          className="glow-blob pointer-events-none absolute -right-24 -top-24 h-[30rem] w-[30rem] opacity-25"
+        />
+        <Reveal className="relative mx-auto flex max-w-7xl flex-col items-center gap-8 text-center">
+          <h2 className="max-w-xl font-display text-4xl leading-snug sm:text-5xl">
+            See the full series, or bring one into a room you&apos;re already
+            picturing.
           </h2>
-          <div className="flex shrink-0 gap-4">
-            <Link
-              href="/products"
-              className="font-mono text-[11px] uppercase tracking-[0.16em] text-canopy bg-filament rounded-full px-6 py-3 transition-opacity hover:opacity-90"
-            >
+          <div className="flex flex-wrap justify-center gap-4">
+            <CharButton href="/products" variant="light">
               Browse products
-            </Link>
-            <Link
-              href="/contact"
-              className="font-mono text-[11px] uppercase tracking-[0.16em] text-vellum border border-vellum/30 rounded-full px-6 py-3 transition-colors hover:border-vellum/60"
-            >
+            </CharButton>
+            <CharButton href="/contact" variant="light">
               Talk to us
-            </Link>
+            </CharButton>
           </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );

@@ -3,53 +3,40 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import FixtureSilhouette from "@/components/fixture-silhouette";
+import CharButton from "@/components/char-button";
 import MediaSlot from "@/components/media-slot";
 
-const CANOPY = "#14120f";
-const VELLUM = "#ede7da";
-
-type IgnitionHeroProps = {
+type SplitHeroProps = {
   eyebrow?: string;
-  heading?: ReactNode;
-  cueText?: string;
-  heightVh?: number;
+  heading: ReactNode;
+  description?: string;
+  cta?: { label: string; href: string };
+  rightContent?: ReactNode;
   media?: { srcImage?: string; srcVideo?: string; label: string };
+  heightVh?: number;
 };
 
 export default function IgnitionHero({
-  eyebrow = "Lumatree — Modular Lighting",
-  heading = (
-    <>
-      Light, shaped
-      <br />
-      like growth.
-    </>
-  ),
-  cueText = "Scroll to switch it on",
-  heightVh = 220,
+  eyebrow,
+  heading,
+  description,
+  cta,
+  rightContent,
   media,
-}: IgnitionHeroProps) {
+  heightVh = 160,
+}: SplitHeroProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-  const cueRef = useRef<HTMLParagraphElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const blobARef = useRef<HTMLDivElement>(null);
+  const blobBRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
-      if (reduceMotion) {
-        gsap.set(stageRef.current, { backgroundColor: VELLUM });
-        gsap.set(glowRef.current, { opacity: 0.5, scale: 1.1 });
-        gsap.set(cueRef.current, { opacity: 0 });
-        return;
-      }
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapperRef.current,
@@ -59,78 +46,70 @@ export default function IgnitionHero({
         },
       });
 
-      tl.fromTo(
-        stageRef.current,
-        { backgroundColor: CANOPY },
-        { backgroundColor: VELLUM, ease: "none" },
-        0
-      )
-        .fromTo(
-          glowRef.current,
-          { opacity: 0.12, scale: 0.55 },
-          { opacity: 0.75, scale: 1.3, ease: "sine.out" },
-          0
-        )
-        .to(glowRef.current, { opacity: 0.5, scale: 1.12, ease: "sine.inOut" }, 0.72)
-        .to(cueRef.current, { opacity: 0, ease: "none" }, 0);
+      tl.to(blobARef.current, { x: 60, y: -40, scale: 1.15, ease: "none" }, 0)
+        .to(blobBRef.current, { x: -40, y: 30, scale: 1.1, ease: "none" }, 0)
+        .to(contentRef.current, { opacity: 0, y: -40, ease: "none" }, 0.55);
     }, wrapperRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div
-      ref={wrapperRef}
-      className="ignition-zone relative"
-      style={{ height: `${heightVh}vh` }}
-    >
-      <div
-        ref={stageRef}
-        className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden"
-        style={{ backgroundColor: CANOPY }}
-      >
+    <div ref={wrapperRef} className="relative" style={{ height: `${heightVh}vh` }}>
+      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden bg-vellum">
         <div
-          ref={glowRef}
-          className="glow-filament absolute h-[46vh] w-[46vh] rounded-full"
-          style={{ top: "38%", left: "50%", translate: "-50% -50%" }}
+          ref={blobARef}
+          aria-hidden="true"
+          className="glow-blob pointer-events-none absolute -left-32 top-16 h-[34rem] w-[34rem] opacity-40"
+        />
+        <div
+          ref={blobBRef}
+          aria-hidden="true"
+          className="glow-blob-soft pointer-events-none absolute bottom-0 right-0 h-[26rem] w-[26rem] opacity-60"
         />
 
-        <div className="mix-blend-difference relative flex h-full w-full max-w-7xl flex-col justify-between px-6 py-28 text-white sm:px-10 sm:py-32">
-          <div className="max-w-md">
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] opacity-70">
-              {eyebrow}
-            </p>
-            <h1 className="mt-5 font-display text-[13vw] italic leading-[0.95] sm:text-6xl md:text-7xl">
+        <div
+          ref={contentRef}
+          className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-14 px-6 pt-20 sm:px-10 md:grid-cols-2 md:items-center md:pt-16"
+        >
+          <div>
+            {eyebrow && (
+              <p className="font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
+                {eyebrow}
+              </p>
+            )}
+            <h1 className="mt-5 font-display text-[12vw] leading-[0.98] text-canopy sm:text-6xl md:text-7xl">
               {heading}
             </h1>
+            {cta && (
+              <div className="mt-9">
+                <CharButton href={cta.href} variant="dark">
+                  {cta.label}
+                </CharButton>
+              </div>
+            )}
           </div>
 
-          <p
-            ref={cueRef}
-            className="font-mono text-[11px] uppercase tracking-[0.2em] opacity-60"
-          >
-            {cueText}
-          </p>
+          <div className="flex flex-col gap-8">
+            {description && (
+              <p className="max-w-md text-base leading-relaxed text-canopy/65">{description}</p>
+            )}
+            {media ? (
+              <MediaSlot
+                srcImage={media.srcImage}
+                srcVideo={media.srcVideo}
+                alt={media.label}
+                label={media.label}
+                tone="light"
+                aspectClassName="aspect-square"
+                className="max-w-md shadow-soft"
+                priority
+              />
+            ) : (
+              rightContent
+            )}
+          </div>
         </div>
-
-        {media ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-16">
-            <MediaSlot
-              srcImage={media.srcImage}
-              srcVideo={media.srcVideo}
-              alt={media.label}
-              label={media.label}
-              tone="dark"
-              aspectClassName="aspect-square"
-              className="h-[52vh] w-auto"
-              priority
-            />
-          </div>
-        ) : (
-          <div className="mix-blend-difference pointer-events-none absolute inset-0 flex items-center justify-center text-white">
-            <FixtureSilhouette className="h-[46vh] w-auto opacity-90" />
-          </div>
-        )}
       </div>
     </div>
   );

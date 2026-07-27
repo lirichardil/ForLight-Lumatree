@@ -18,7 +18,7 @@ export default function DiffusionCompare() {
           }}
         />
         <div className="absolute inset-x-0 bottom-0 p-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-vellum/50">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-vellum/50">
             A bare bulb
           </p>
           <p className="mt-1 text-sm text-vellum/70">
@@ -36,11 +36,11 @@ export default function DiffusionCompare() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(circle at 50% 45%, #f2a34e 0%, rgba(242,163,78,0.6) 18%, rgba(242,163,78,0.22) 42%, transparent 78%)",
+              "radial-gradient(circle at 50% 45%, #ff6a1a 0%, rgba(255,106,26,0.6) 18%, rgba(255,106,26,0.22) 42%, transparent 78%)",
           }}
         />
         <div className="absolute inset-x-0 bottom-0 p-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-vellum/50">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-vellum/50">
             Through opal glass
           </p>
           <p className="mt-1 text-sm text-vellum/70">

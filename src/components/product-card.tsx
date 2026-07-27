@@ -14,13 +14,13 @@ export default function ProductCard({ product }: { product: ProductWithGallery }
       />
       <div className="mt-5 flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-mist">
+          <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-mist">
             {product.series}
           </p>
-          <h3 className="mt-1 font-display text-2xl italic">{product.name}</h3>
+          <h3 className="mt-1 font-display text-2xl text-canopy">{product.name}</h3>
           <p className="mt-1 text-sm text-canopy/60">{product.tagline}</p>
         </div>
-        <p className="whitespace-nowrap font-mono text-[11px] text-canopy/50">
+        <p className="whitespace-nowrap text-[12px] text-canopy/50">
           ⌀ {product.diameterCm}cm
         </p>
       </div>

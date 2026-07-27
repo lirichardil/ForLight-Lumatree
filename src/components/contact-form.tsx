@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import CharButton from "@/components/char-button";
 
 export default function ContactForm({ productNames }: { productNames: string[] }) {
   const [sent, setSent] = useState(false);
@@ -15,7 +16,7 @@ export default function ContactForm({ productNames }: { productNames: string[] }
   if (sent) {
     return (
       <div className="rounded-[20px] border border-canopy/10 bg-vellum-dim p-8">
-        <p className="font-display text-2xl italic">Message sent.</p>
+        <p className="font-display text-2xl text-canopy">Message sent.</p>
         <p className="mt-2 text-sm text-canopy/60">
           We read every message ourselves. Expect a reply within two
           business days.
@@ -71,12 +72,9 @@ export default function ContactForm({ productNames }: { productNames: string[] }
         />
       </Field>
 
-      <button
-        type="submit"
-        className="font-mono text-[11px] uppercase tracking-[0.16em] text-vellum bg-canopy rounded-full px-6 py-3 transition-opacity hover:opacity-90"
-      >
+      <CharButton type="submit" variant="dark">
         Send message
-      </button>
+      </CharButton>
     </form>
   );
 }
@@ -84,7 +82,7 @@ export default function ContactForm({ productNames }: { productNames: string[] }
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-canopy/50">
+      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-canopy/50">
         {label}
       </span>
       <div className="mt-2">{children}</div>

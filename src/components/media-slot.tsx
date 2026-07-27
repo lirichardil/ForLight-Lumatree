@@ -85,8 +85,8 @@ function PlaceholderArt({ tone, label }: { tone: Tone; label: string }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background: isDark
-            ? "radial-gradient(circle at 50% 38%, rgba(242,163,78,0.55) 0%, rgba(242,163,78,0.14) 32%, transparent 62%)"
-            : "radial-gradient(circle at 50% 38%, rgba(242,163,78,0.35) 0%, rgba(242,163,78,0.08) 34%, transparent 64%)",
+            ? "radial-gradient(circle at 50% 38%, rgba(255,106,26,0.55) 0%, rgba(255,106,26,0.14) 32%, transparent 62%)"
+            : "radial-gradient(circle at 50% 38%, rgba(255,106,26,0.35) 0%, rgba(255,106,26,0.08) 34%, transparent 64%)",
         }}
       />
       <div
@@ -98,7 +98,7 @@ function PlaceholderArt({ tone, label }: { tone: Tone; label: string }) {
       />
       <span
         className={clsx(
-          "relative font-mono text-[10px] uppercase tracking-[0.14em]",
+          "relative text-[11px] font-medium uppercase tracking-[0.1em]",
           isDark ? "text-vellum/50" : "text-canopy/40"
         )}
       >

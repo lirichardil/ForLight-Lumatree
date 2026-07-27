@@ -30,8 +30,8 @@ export default function ProductGrid({ products }: { products: ProductWithGallery
             type="button"
             onClick={() => setFilter(f.value)}
             className={clsx(
-              "font-mono text-[11px] uppercase tracking-[0.16em] transition-colors",
-              filter === f.value ? "text-canopy" : "text-canopy/40 hover:text-canopy/70"
+              "text-[13px] font-medium uppercase tracking-[0.1em] transition-colors",
+              filter === f.value ? "text-filament" : "text-canopy/40 hover:text-canopy/70"
             )}
           >
             {f.label}

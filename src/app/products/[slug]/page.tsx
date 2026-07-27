@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import IgnitionHero from "@/components/ignition-hero";
 import MediaSlot from "@/components/media-slot";
+import CharButton from "@/components/char-button";
+import Reveal from "@/components/reveal";
 import { getAllProducts, getProductBySlug } from "@/lib/products";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -43,17 +44,17 @@ export default async function ProductPage({ params }: Props) {
     <>
       <IgnitionHero
         eyebrow={product.series}
-        heading={<span className="not-italic">{product.name}</span>}
-        cueText={product.tagline}
-        heightVh={180}
+        heading={product.name}
+        description={product.tagline}
+        heightVh={140}
         media={{ srcImage: product.heroImage, label: product.name }}
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-24 sm:px-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+      <Reveal className="mx-auto max-w-5xl px-6 py-24 sm:px-10">
+        <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
           About {product.name}
         </p>
-        <p className="text-balance mt-6 max-w-2xl font-display text-2xl italic leading-relaxed sm:text-3xl">
+        <p className="text-balance mt-6 max-w-2xl font-display text-2xl leading-relaxed text-canopy sm:text-3xl">
           {product.description}
         </p>
 
@@ -70,50 +71,49 @@ export default async function ProductPage({ params }: Props) {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {product.gallery.length > 0 && (
         <section className="px-6 pb-24 sm:px-10">
           <div className="mx-auto max-w-7xl">
-            <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+            <p className="mb-8 text-[13px] font-medium uppercase tracking-[0.14em] text-mist">
               Gallery
             </p>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {product.gallery.map((src, i) => (
-                <MediaSlot
-                  key={src}
-                  srcImage={src}
-                  alt={`${product.name} — view ${i + 1}`}
-                  label={`${product.name} ${i + 1}`}
-                  tone="light"
-                  aspectClassName="aspect-[4/5]"
-                />
+                <Reveal key={src} delay={i * 0.06}>
+                  <MediaSlot
+                    srcImage={src}
+                    alt={`${product.name} — view ${i + 1}`}
+                    label={`${product.name} ${i + 1}`}
+                    tone="light"
+                    aspectClassName="aspect-[4/5]"
+                  />
+                </Reveal>
               ))}
             </div>
           </div>
         </section>
       )}
 
-      <section className="border-t border-canopy/10 bg-bark px-6 py-20 text-vellum sm:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
-          <h2 className="max-w-lg font-display text-3xl italic leading-snug sm:text-4xl">
+      <section className="relative overflow-hidden bg-canopy px-6 py-24 text-vellum sm:px-10">
+        <div
+          aria-hidden="true"
+          className="glow-blob pointer-events-none absolute -left-20 bottom-0 h-[28rem] w-[28rem] opacity-25"
+        />
+        <Reveal className="relative mx-auto flex max-w-7xl flex-col items-center gap-8 text-center">
+          <h2 className="max-w-lg font-display text-3xl leading-snug sm:text-4xl">
             Picture {product.name.toLowerCase()} in your own space?
           </h2>
-          <div className="flex shrink-0 gap-4">
-            <Link
-              href="/contact"
-              className="font-mono text-[11px] uppercase tracking-[0.16em] text-canopy bg-filament rounded-full px-6 py-3 transition-opacity hover:opacity-90"
-            >
+          <div className="flex flex-wrap justify-center gap-4">
+            <CharButton href="/contact" variant="light">
               Ask about this fixture
-            </Link>
-            <Link
-              href="/products"
-              className="font-mono text-[11px] uppercase tracking-[0.16em] text-vellum border border-vellum/30 rounded-full px-6 py-3 transition-colors hover:border-vellum/60"
-            >
+            </CharButton>
+            <CharButton href="/products" variant="light">
               Back to series
-            </Link>
+            </CharButton>
           </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );

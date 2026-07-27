@@ -13,10 +13,10 @@ export default async function ProductsPage() {
   return (
     <div className="px-6 pb-24 pt-36 sm:px-10 sm:pt-44">
       <div className="mx-auto max-w-7xl">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+        <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
           The series
         </p>
-        <h1 className="mt-4 max-w-2xl font-display text-4xl italic leading-snug sm:text-5xl">
+        <h1 className="mt-4 max-w-2xl font-display text-4xl leading-snug text-canopy sm:text-5xl">
           Six fixtures, one idea: soft light, shaped like growth.
         </h1>
 

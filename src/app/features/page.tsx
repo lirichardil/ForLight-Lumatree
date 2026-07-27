@@ -29,15 +29,19 @@ const STEPS = [
 
 export default function FeaturesPage() {
   return (
-    <div className="px-6 pb-24 pt-36 sm:px-10 sm:pt-44">
-      <div className="mx-auto max-w-7xl">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+    <div className="relative overflow-hidden px-6 pb-24 pt-36 sm:px-10 sm:pt-44">
+      <div
+        aria-hidden="true"
+        className="glow-blob-soft pointer-events-none absolute -right-40 top-20 h-[32rem] w-[32rem] opacity-60"
+      />
+      <div className="relative mx-auto max-w-7xl">
+        <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
           Features
         </p>
-        <h1 className="text-balance mt-4 max-w-2xl font-display text-4xl italic leading-snug sm:text-5xl">
+        <h1 className="text-balance mt-4 max-w-2xl font-display text-4xl leading-snug text-canopy sm:text-5xl">
           The whole design brief was softness.
         </h1>
-        <p className="mt-6 max-w-xl text-sm leading-relaxed text-canopy/60">
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-canopy/60">
           Lumatree isn&apos;t built to be bright. It&apos;s built so that the
           edge between light and shadow in a room is something you feel
           rather than notice — and that comes down to how each fixture
@@ -49,16 +53,16 @@ export default function FeaturesPage() {
         </Reveal>
 
         <div className="mt-28 border-t border-canopy/10 pt-16">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+          <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-mist">
             How it happens
           </p>
           <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-14 sm:grid-cols-3">
             {STEPS.map((step, i) => (
               <Reveal key={step.stage} delay={i * 0.1}>
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-filament">
+                <p className="text-[13px] font-medium uppercase tracking-[0.1em] text-filament">
                   {step.stage}
                 </p>
-                <h3 className="mt-3 font-display text-2xl italic leading-snug">
+                <h3 className="mt-3 font-display text-2xl leading-snug text-canopy">
                   {step.title}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-canopy/60">
@@ -71,13 +75,13 @@ export default function FeaturesPage() {
 
         <Reveal className="mt-28 grid grid-cols-1 gap-10 border-t border-canopy/10 pt-16 md:grid-cols-2 md:items-center md:gap-16">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">
+            <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-mist">
               In a room
             </p>
-            <h2 className="mt-4 font-display text-3xl italic leading-snug sm:text-4xl">
+            <h2 className="mt-4 font-display text-3xl leading-snug text-canopy sm:text-4xl">
               Shadows with depth, not edges.
             </h2>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-canopy/60">
+            <p className="mt-5 max-w-md text-base leading-relaxed text-canopy/60">
               Photograph any fixture in the series at night and the story is
               in what surrounds it — the wall it softens into, the shadow it
               never quite finishes casting.
