@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canopy: #14120f;
+  --color-bark: #2b241c;
+  --color-filament: #f2a34e;
+  --color-filament-soft: #f2a34e33;
+  --color-vellum: #ede7da;
+  --color-vellum-dim: #e2dbcb;
+  --color-mist: #8c8577;
+}
+
+@theme inline {
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-filament-soft);
+  color: var(--color-canopy);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-filament);
+  outline-offset: 3px;
+}
+
+/* Soft ambient shadow — the ground language of the whole site: every raised
+   surface reads as if it's catching diffused light, not a hard drop shadow. */
+.shadow-soft {
+  box-shadow:
+    0 1px 2px rgba(20, 18, 15, 0.04),
+    0 8px 24px rgba(20, 18, 15, 0.06),
+    0 24px 64px rgba(20, 18, 15, 0.05);
+}
+
+.shadow-soft-dark {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 12px 32px rgba(0, 0, 0, 0.35),
+    0 32px 80px rgba(0, 0, 0, 0.3);
+}
+
+.glow-filament {
+  background: radial-gradient(
+    circle at center,
+    var(--color-filament) 0%,
+    color-mix(in srgb, var(--color-filament) 45%, transparent) 35%,
+    transparent 70%
+  );
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.field-input {
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--color-canopy) 15%, transparent);
+  background: var(--color-vellum);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: var(--color-canopy);
+  transition: border-color 0.3s ease;
+}
+
+.field-input::placeholder {
+  color: color-mix(in srgb, var(--color-canopy) 35%, transparent);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-filament);
+}

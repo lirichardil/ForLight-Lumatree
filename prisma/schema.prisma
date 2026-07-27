@@ -1,0 +1,40 @@
+// Prisma schema for the Lumatree lighting fixture catalog.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum FixtureType {
+  PENDANT
+  CHANDELIER
+  SCONCE
+  FLOOR
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  series      String
+  type        FixtureType
+  tagline     String
+  description String
+  materials   String
+  diameterCm  Float
+  heightCm    Float
+  colorTempK  Int
+  lumens      Int
+  dimmable    Boolean     @default(true)
+  priceUsd    Int
+  heroImage   String
+  gallery     String
+  featured    Boolean     @default(false)
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
