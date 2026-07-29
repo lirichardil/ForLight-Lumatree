@@ -1,33 +1,36 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Onest, JetBrains_Mono } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
+import SmoothScroll from "@/components/smooth-scroll";
 
-const fraunces = Fraunces({
+/**
+ * Onest carries the whole site. Chosen over a display/body split because the
+ * product is one extrusion in six forms: a single type family reinforces
+ * that. It is also the family aircenter.space uses, which is the reference
+ * for this site's white ground.
+ */
+const onest = Onest({
   variable: "--font-display",
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: "variable",
-  axes: ["opsz", "SOFT", "WONK"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const plexMono = IBM_Plex_Mono({
+/** Mono is reserved for photometric figures. Never for body or headings. */
+const mono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Lumatree — Light, shaped like growth",
+  title: "Lumatree. One bar, six fixtures.",
   description:
-    "Lumatree is a modular lighting fixture series built around soft, diffused light and forms that branch like a tree — trunk, bough, and canopy.",
+    "A wood-clad linear LED bar with deep-recessed optics, built in six mounts. UGR9, CRI92 and dim-to-warm across the range.",
 };
 
 export default function RootLayout({
@@ -36,11 +39,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-vellum text-canopy font-body">
+    <html lang="en" className={`${onest.variable} ${mono.variable} antialiased`}>
+      <body className="flex min-h-[100dvh] flex-col">
+        <SmoothScroll />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

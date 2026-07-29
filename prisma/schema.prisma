@@ -1,4 +1,9 @@
-// Prisma schema for the Lumatree lighting fixture catalog.
+// Prisma schema for the Lumatree catalogue.
+//
+// Shape follows the real range: one wood-clad LED bar in six mounts, grouped
+// into three families. Several specs are genuine multi-values (the Pendant
+// ships at three lengths with three different outputs), so those are stored
+// as display strings rather than being flattened into a single number.
 
 generator client {
   provider = "prisma-client"
@@ -11,30 +16,50 @@ datasource db {
 
 enum FixtureType {
   PENDANT
-  CHANDELIER
-  SCONCE
-  FLOOR
+  WALL
+  FLOOR_TASK
+  FLOOR_WASH
+  TABLE_TASK
+  TABLE_WASH
+}
+
+enum Family {
+  ARCHITECTURAL
+  TASK
+  WASH
 }
 
 model Product {
   id          String      @id @default(cuid())
   slug        String      @unique
   name        String
-  series      String
+  family      Family
   type        FixtureType
   tagline     String
   description String
-  materials   String
-  diameterCm  Float
-  heightCm    Float
-  colorTempK  Int
-  lumens      Int
-  dimmable    Boolean     @default(true)
-  priceUsd    Int
-  heroImage   String
-  gallery     String
-  featured    Boolean     @default(false)
-  sortOrder   Int         @default(0)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+
+  // Geometry, millimetres.
+  profileMm   String // extrusion cross-section, e.g. "42 x 36"
+  litLengthMm String // emitting length(s), e.g. "860 / 1200 / 1500"
+  overallMm   String // overall height or projection
+  baseMm      String // base footprint, empty for pendant and wall
+
+  // Photometrics, from the catalogue spec sheets.
+  watts     String
+  lumens    String
+  beamAngle String
+  ugr       Int? // only the bi-emissive Pendant and Wall are UGR rated
+  cri       Int    @default(92)
+  kelvin    String
+  weightKg  String
+
+  control  String // JSON array of control options
+  finishes String // JSON array of finish names
+
+  heroImage String
+  gallery   String // JSON array
+  featured  Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,24 +1,170 @@
 @import "tailwindcss";
 
-@theme {
-  /* mdx.so-inspired palette: light paper base, ink navy text, warm-light
-     orange accent. `bark` stays a dark navy reserved for the occasional
-     contrast band (CTA close, footer accent) rather than a base surface. */
-  --color-canopy: #10141c;
-  --color-bark: #10141c;
-  --color-filament: #ff6a1a;
-  --color-filament-soft: #ff6a1a29;
-  --color-vellum: #fbfaf8;
-  --color-vellum-dim: #f2efe9;
-  --color-mist: #6b7078;
-}
+/* ---------------------------------------------------------------------------
+   LUMATREE DESIGN TOKENS
 
-@theme inline {
+   Two grounds, one rule.
+
+   GALLERY  the neutral ground everything informational sits on. Deliberately
+            neutral rather than cream: warm light needs a non-warm ground to
+            read as warm (simultaneous contrast). A cream page makes 2700K
+            look beige.
+   STAGE    the matte near-black the product is photographed against. Never
+            pure #000 so emitted light has a surface to fall on.
+
+   THE RULE the only chromatic colour on this site is light the fixture
+            emits. Wood is material, not accent. Buttons, borders, links and
+            states are all neutral. --emit-* is for glow only, never for UI.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Stage: the product's photographic environment. Does not invert. */
+  --color-stage: #0b0b0c;
+  --color-stage-raised: #141416;
+  --color-stage-line: #ffffff1a;
+
+  /* Gallery: the informational ground. Inverts under dark scheme. */
+  --color-gallery: #f6f6f4;
+  --color-gallery-dim: #ecece8;
+  --color-ink: #111112;
+  --color-muted: #8d8d8d;
+  --color-line: #1111121f;
+
+  /* Material. Sampled from the three catalogue finishes. */
+  --color-oak: #c9a06a;
+  --color-walnut: #8a5334;
+  --color-ash: #2c2926;
+
+  /* Emitted light only. Never a UI colour. */
+  --color-emit: #ffb46b;
+  --color-emit-low: #ff8a3d;
+
   --font-display: var(--font-display);
-  --font-body: var(--font-body);
-  --font-sans: var(--font-body);
+  --font-body: var(--font-display);
+  --font-sans: var(--font-display);
   --font-mono: var(--font-mono);
 }
+
+/* Semantic surface variables.
+
+   This site is locked light by explicit brand instruction. It does not follow
+   prefers-color-scheme, because the white ground is the identity, not a
+   preference: a neutral ground is what makes 2700K light read as warm, and
+   inverting it would put warm light on warm ground and flatten the product.
+   The dark stage below is a photographic set, not a dark theme. */
+:root {
+  color-scheme: light;
+  --surface: var(--color-gallery);
+  --surface-dim: var(--color-gallery-dim);
+  --on-surface: var(--color-ink);
+  --on-surface-muted: var(--color-muted);
+  --hairline: var(--color-line);
+}
+
+/* ---------------------------------------------------------------------------
+   SHAPE RULE (one documented system, applied everywhere)
+   Interactive controls  full pill
+   Everything else       square, radius 0
+   Borrowed from aircenter.space, which uses exactly this split.
+--------------------------------------------------------------------------- */
+
+html {
+  /* No scroll-behavior: smooth. Lenis owns scrolling; the two fight. */
+  background: var(--surface);
+}
+
+body {
+  font-family: var(--font-display);
+  background: var(--surface);
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--on-surface);
+  color: var(--surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--on-surface);
+  outline-offset: 3px;
+}
+
+/* Lenis needs the html element unconstrained while it drives transform. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   STAGE PRIMITIVES
+--------------------------------------------------------------------------- */
+
+/* The dark set the product sits on. A shallow vertical falloff plus a pool of
+   light under the fixture, so emitted light has somewhere to land. Without
+   this the product looks pasted onto a void. */
+.stage-floor {
+  background:
+    radial-gradient(120% 60% at 50% 62%, #1a1a1c 0%, transparent 70%),
+    linear-gradient(180deg, #0b0b0c 0%, #101012 55%, #08080a 100%);
+}
+
+.hairline {
+  border-color: var(--hairline);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Spec figures use tabular mono so columns of numbers align. */
+.figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------------------
+   FORM CONTROLS  WCAG AA against both grounds
+--------------------------------------------------------------------------- */
+
+.field-input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  padding: 0.85rem 0;
+  font-size: 0.95rem;
+  color: var(--on-surface);
+  transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.field-input::placeholder {
+  /* #6b6b6b on #f6f6f4 clears 4.5:1. Do not lighten. */
+  color: #6b6b6b;
+}
+
+.field-input:focus {
+  outline: none;
+  border-bottom-color: var(--on-surface);
+}
+
+/* ---------------------------------------------------------------------------
+   REDUCED MOTION
+   Every scroll-driven scene degrades to a static poster frame.
+--------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -29,87 +175,4 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-body);
-}
-
-::selection {
-  background: var(--color-filament-soft);
-  color: var(--color-canopy);
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-filament);
-  outline-offset: 3px;
-}
-
-/* Soft ambient shadow — the ground language of the whole site: every raised
-   surface reads as if it's catching diffused light, not a hard drop shadow. */
-.shadow-soft {
-  box-shadow:
-    0 1px 2px rgba(20, 18, 15, 0.04),
-    0 8px 24px rgba(20, 18, 15, 0.06),
-    0 24px 64px rgba(20, 18, 15, 0.05);
-}
-
-.shadow-soft-dark {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 12px 32px rgba(0, 0, 0, 0.35),
-    0 32px 80px rgba(0, 0, 0, 0.3);
-}
-
-.glow-filament {
-  background: radial-gradient(
-    circle at center,
-    var(--color-filament) 0%,
-    color-mix(in srgb, var(--color-filament) 45%, transparent) 35%,
-    transparent 70%
-  );
-}
-
-/* Soft blurred decorative blobs — the mdx.so-style ambient glow layers
-   sitting behind hero/section copy. Blur does the softening, not the
-   gradient falloff, so it reads like an out-of-focus photo layer. */
-.glow-blob {
-  border-radius: 9999px;
-  background: var(--color-filament);
-  filter: blur(90px);
-  opacity: 0.35;
-}
-
-.glow-blob-soft {
-  border-radius: 9999px;
-  background: var(--color-filament-soft);
-  filter: blur(70px);
-}
-
-.text-balance {
-  text-wrap: balance;
-}
-
-.field-input {
-  width: 100%;
-  border: 1px solid color-mix(in srgb, var(--color-canopy) 15%, transparent);
-  background: var(--color-vellum);
-  border-radius: 14px;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  color: var(--color-canopy);
-  transition: border-color 0.3s ease;
-}
-
-.field-input::placeholder {
-  color: color-mix(in srgb, var(--color-canopy) 35%, transparent);
-}
-
-.field-input:focus {
-  outline: none;
-  border-color: var(--color-filament);
 }
