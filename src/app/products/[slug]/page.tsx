@@ -1,119 +1,217 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import IgnitionHero from "@/components/ignition-hero";
-import MediaSlot from "@/components/media-slot";
-import CharButton from "@/components/char-button";
+import FixtureDiagram from "@/components/fixture-diagram";
+import FixtureCard from "@/components/fixture-card";
 import Reveal from "@/components/reveal";
+import PillButton from "@/components/pill-button";
 import { getAllProducts, getProductBySlug } from "@/lib/products";
-
-type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
   return products.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return {};
+  if (!product) return { title: "Not found. Lumatree" };
   return {
-    title: `${product.name} — Lumatree`,
+    title: `${product.name}. Lumatree`,
     description: product.tagline,
   };
 }
 
-const SPEC_ROWS = (product: NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>) => [
-  ["Series", product.series],
-  ["Type", product.type[0] + product.type.slice(1).toLowerCase()],
-  ["Diameter", `${product.diameterCm} cm`],
-  ["Height", `${product.heightCm} cm`],
-  ["Color temperature", `${product.colorTempK}K`],
-  ["Output", `${product.lumens} lm`],
-  ["Dimmable", product.dimmable ? "Yes" : "No"],
-  ["Materials", product.materials],
-  ["Price", `$${product.priceUsd.toLocaleString()}`],
-];
+/** Grouped into three clusters rather than one long hairline-per-row table. */
+function specClusters(p: NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>) {
+  return [
+    {
+      name: "Light",
+      rows: [
+        ["Output", `${p.lumens} lm`],
+        ["Load", `${p.watts} W`],
+        ["Beam angle", `${p.beamAngle} degrees`],
+        ["Colour rendering", `CRI ${p.cri}`],
+        ...(p.ugr !== null ? [["Glare", `UGR ${p.ugr}`]] : []),
+        ["Colour temperature", p.kelvin],
+      ],
+    },
+    {
+      name: "Body",
+      rows: [
+        ["Profile", `${p.profileMm} mm`],
+        ["Emitting length", `${p.litLengthMm} mm`],
+        ["Overall", p.overallMm],
+        ...(p.baseMm ? [["Base", `${p.baseMm} mm`]] : []),
+        ["Weight", `${p.weightKg} kg`],
+      ],
+    },
+    {
+      name: "Control",
+      rows: (JSON.parse(p.control) as string[]).map((c) => [c, ""]),
+    },
+  ];
+}
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
+  const finishes = JSON.parse(product.finishes) as string[];
+  const clusters = specClusters(product);
+  const all = await getAllProducts();
+  const others = all.filter((p) => p.slug !== product.slug).slice(0, 3);
+
   return (
     <>
-      <IgnitionHero
-        eyebrow={product.series}
-        heading={product.name}
-        description={product.tagline}
-        heightVh={140}
-        media={{ srcImage: product.heroImage, label: product.name }}
-      />
+      {/* Hero: the fixture drawn to scale on its own dark set. */}
+      <section className="bg-stage">
+        <div className="stage-floor">
+          <div className="mx-auto grid max-w-[1400px] gap-12 px-6 pb-24 pt-40 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20 lg:px-10">
+            <div>
+              <h1 className="text-[clamp(2.6rem,6vw,5rem)] font-light leading-[1] tracking-[-0.045em] text-white">
+                {product.name}
+              </h1>
+              <p className="mt-6 max-w-md text-[15px] leading-relaxed text-white/60">
+                {product.tagline}
+              </p>
 
-      <Reveal className="mx-auto max-w-5xl px-6 py-24 sm:px-10">
-        <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
-          About {product.name}
-        </p>
-        <p className="text-balance mt-6 max-w-2xl font-display text-2xl leading-relaxed text-canopy sm:text-3xl">
-          {product.description}
-        </p>
-
-        <div className="mt-16 border-t border-canopy/10">
-          {SPEC_ROWS(product).map(([label, value]) => (
-            <div
-              key={label}
-              className="flex items-center justify-between border-b border-canopy/10 py-4"
-            >
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-canopy/50">
-                {label}
-              </span>
-              <span className="font-mono text-sm text-canopy">{value}</span>
+              <dl className="mt-14 grid max-w-md grid-cols-3 gap-6 border-t border-white/15 pt-8">
+                <div>
+                  <dt className="text-[11px] text-white/45">Output</dt>
+                  <dd className="figure mt-2 text-lg text-white">
+                    {product.lumens.split(" ")[0]}
+                    <span className="text-[11px] text-white/45"> lm</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-white/45">Load</dt>
+                  <dd className="figure mt-2 text-lg text-white">
+                    {product.watts.split(" ")[0]}
+                    <span className="text-[11px] text-white/45"> W</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-white/45">
+                    {product.ugr !== null ? "Glare" : "Rendering"}
+                  </dt>
+                  <dd className="figure mt-2 text-lg text-white">
+                    {product.ugr !== null ? `UGR${product.ugr}` : `CRI${product.cri}`}
+                  </dd>
+                </div>
+              </dl>
             </div>
-          ))}
+
+            <div className="flex items-center justify-center py-10">
+              <FixtureDiagram
+                slug={product.slug}
+                className="h-[min(60vh,520px)] w-full text-white/85"
+              />
+            </div>
+          </div>
         </div>
-      </Reveal>
+      </section>
 
-      {product.gallery.length > 0 && (
-        <section className="px-6 pb-24 sm:px-10">
-          <div className="mx-auto max-w-7xl">
-            <p className="mb-8 text-[13px] font-medium uppercase tracking-[0.14em] text-mist">
-              Gallery
+      {/* Description plus finishes. */}
+      <section className="bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-36">
+        <div className="mx-auto grid max-w-[1400px] gap-16 lg:grid-cols-[1.1fr_1fr] lg:gap-24">
+          <Reveal>
+            <p className="max-w-xl text-[clamp(1.15rem,2.1vw,1.6rem)] font-light leading-[1.45] tracking-[-0.02em] text-[--color-ink]">
+              {product.description}
             </p>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {product.gallery.map((src, i) => (
-                <Reveal key={src} delay={i * 0.06}>
-                  <MediaSlot
-                    srcImage={src}
-                    alt={`${product.name} — view ${i + 1}`}
-                    label={`${product.name} ${i + 1}`}
-                    tone="light"
-                    aspectClassName="aspect-[4/5]"
-                  />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+          </Reveal>
 
-      <section className="relative overflow-hidden bg-canopy px-6 py-24 text-vellum sm:px-10">
-        <div
-          aria-hidden="true"
-          className="glow-blob pointer-events-none absolute -left-20 bottom-0 h-[28rem] w-[28rem] opacity-25"
-        />
-        <Reveal className="relative mx-auto flex max-w-7xl flex-col items-center gap-8 text-center">
-          <h2 className="max-w-lg font-display text-3xl leading-snug sm:text-4xl">
-            Picture {product.name.toLowerCase()} in your own space?
-          </h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            <CharButton href="/contact" variant="light">
-              Ask about this fixture
-            </CharButton>
-            <CharButton href="/products" variant="light">
-              Back to series
-            </CharButton>
+          <Reveal delay={0.1}>
+            <h2 className="text-[13px] text-[#5c5c5c]">Finishes</h2>
+            <ul className="mt-6 flex flex-col">
+              {finishes.map((finish) => (
+                <li
+                  key={finish}
+                  className="flex items-center gap-4 border-b border-[--color-line] py-4"
+                >
+                  <span
+                    className="h-8 w-14"
+                    style={{
+                      background:
+                        finish === "Oak"
+                          ? "linear-gradient(180deg,#d8b483,#c9a06a)"
+                          : finish === "Walnut"
+                            ? "linear-gradient(180deg,#a9723f,#8a5334)"
+                            : "linear-gradient(180deg,#3a3733,#2c2926)",
+                    }}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[14px] text-[--color-ink]">{finish}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 text-[12px] leading-relaxed text-[#6b6b6b]">
+              All three are FSC certified. Grain runs along the length of the
+              extrusion.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Specifications, clustered. */}
+      <section className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-36">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal>
+            <h2 className="text-[clamp(1.8rem,3.4vw,2.8rem)] font-light tracking-[-0.04em] text-[--color-ink]">
+              Specifications
+            </h2>
+          </Reveal>
+
+          <div className="mt-14 grid gap-12 md:grid-cols-3">
+            {clusters.map((cluster, ci) => (
+              <Reveal key={cluster.name} delay={ci * 0.08}>
+                <div className="bg-[--color-gallery-dim] p-8">
+                  <h3 className="text-[13px] text-[#5c5c5c]">{cluster.name}</h3>
+                  <dl className="mt-6 flex flex-col gap-5">
+                    {cluster.rows.map(([label, value]) => (
+                      <div key={label}>
+                        <dt className="text-[12px] text-[#6b6b6b]">{label}</dt>
+                        {value && (
+                          <dd className="figure mt-1 text-[14px] leading-snug text-[--color-ink]">
+                            {value}
+                          </dd>
+                        )}
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </Reveal>
+            ))}
           </div>
-        </Reveal>
+
+          <Reveal>
+            <div className="mt-16">
+              <PillButton href="/contact">Enquire</PillButton>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Rest of the range. */}
+      <section className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-28 lg:px-10">
+        <div className="mx-auto max-w-[1400px]">
+          <h2 className="text-[13px] text-[#5c5c5c]">Rest of the range</h2>
+          <div className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-3">
+            {others.map((p, i) => (
+              <Reveal key={p.id} delay={i * 0.08}>
+                <FixtureCard product={p} className="h-full" />
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
     </>
   );

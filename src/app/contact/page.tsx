@@ -1,52 +1,49 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/contact-form";
+import Reveal from "@/components/reveal";
 import { getAllProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
-  title: "Contact — Lumatree",
-  description: "Get in touch about the Lumatree lighting fixture series.",
+  title: "Enquire. Lumatree",
+  description:
+    "Request specification sheets, finish samples and lead times for the Lumatree range.",
 };
 
 export default async function ContactPage() {
   const products = await getAllProducts();
 
   return (
-    <div className="relative overflow-hidden px-6 pb-24 pt-36 sm:px-10 sm:pt-44">
-      <div
-        aria-hidden="true"
-        className="glow-blob-soft pointer-events-none absolute -right-32 top-24 h-[30rem] w-[30rem] opacity-60"
-      />
-      <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-24">
-        <div>
-          <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-filament">
-            Contact
-          </p>
-          <h1 className="text-balance mt-4 font-display text-4xl leading-snug text-canopy sm:text-5xl">
-            Ask us anything before it arrives.
+    <div className="bg-[--color-gallery] px-6 pb-32 pt-40 lg:px-10">
+      <div className="mx-auto grid max-w-[1400px] gap-16 lg:grid-cols-[1fr_1.2fr] lg:gap-24">
+        <Reveal>
+          <h1 className="max-w-[13ch] text-[clamp(2.4rem,5vw,4rem)] font-light leading-[1.02] tracking-[-0.045em] text-[--color-ink]">
+            Tell us about the space.
           </h1>
-          <p className="mt-6 max-w-sm text-base leading-relaxed text-canopy/60">
-            Sizing for a specific room, lead times, dealer availability — if
-            you&apos;re picturing a fixture somewhere, tell us where and
-            we&apos;ll help you get the right one.
+          <p className="mt-8 max-w-sm text-[15px] leading-relaxed text-[#5c5c5c]">
+            We quote from drawings and send finish samples on request. For
+            specification work, include the ceiling height and the mounting
+            positions you are considering.
           </p>
 
-          <div className="mt-12 space-y-6 border-t border-canopy/10 pt-8">
+          <dl className="mt-14 flex flex-col gap-5 border-t border-[--color-line] pt-8">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-canopy/50">
-                Email
-              </p>
-              <p className="mt-1 text-sm text-canopy">hello@lumatree.example</p>
+              <dt className="text-[12px] text-[#6b6b6b]">Enquiries</dt>
+              <dd className="mt-1 text-[14px] text-[--color-ink]">
+                hello@lumatree.com
+              </dd>
             </div>
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-canopy/50">
-                Studio
-              </p>
-              <p className="mt-1 text-sm text-canopy">By appointment only</p>
+              <dt className="text-[12px] text-[#6b6b6b]">Lead time</dt>
+              <dd className="figure mt-1 text-[14px] text-[--color-ink]">
+                6 to 8 weeks
+              </dd>
             </div>
-          </div>
-        </div>
+          </dl>
+        </Reveal>
 
-        <ContactForm productNames={products.map((p) => p.name)} />
+        <Reveal delay={0.1}>
+          <ContactForm productNames={products.map((p) => p.name)} />
+        </Reveal>
       </div>
     </div>
   );

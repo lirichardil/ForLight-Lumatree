@@ -97,8 +97,19 @@ export default function FrameSequence({
       }
       ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Cover fit: fill the viewport, crop the overflow, stay centred.
-      const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      // Landscape viewports cover-fit. Portrait ones would crop a 16:9 frame
+      // off both edges and cut the fixture in half, so they fit to width and
+      // then zoom 1.7x. The zoom eats letterbox space rather than subject:
+      // the fixture occupies the middle ~45% of every frame, so 1.7x still
+      // leaves it comfortably inside. Clamped so it never exceeds cover.
+      // Letterboxing is invisible because the frames share this background.
+      const portrait = cw / ch < 1.2;
+      const scale = portrait
+        ? Math.min(
+            (cw / img.naturalWidth) * 1.7,
+            ch / img.naturalHeight
+          )
+        : Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       const w = img.naturalWidth * scale;
       const h = img.naturalHeight * scale;
       ctx2d.fillStyle = "#0b0b0c";

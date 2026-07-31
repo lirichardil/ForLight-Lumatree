@@ -1,77 +1,109 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NAV_LINKS } from "@/lib/nav";
-import CharButton from "@/components/char-button";
+import PillButton from "@/components/pill-button";
 
+/**
+ * Fixed header, 64px tall, single line at desktop.
+ *
+ * The bar always carries the light ground, including over a dark product
+ * scene. Going transparent at scroll-top put ink-coloured text on the dark
+ * hero and made the wordmark and CTA unreadable. Keeping page chrome on one
+ * ground is also the rule the rest of the site follows: the dark sections
+ * are photographs, not a theme.
+ *
+ * Note bg-gallery/88 rather than bg-[--color-gallery]/88. Tailwind cannot
+ * apply an opacity modifier to a raw var() colour and drops the declaration
+ * silently, which is what made the bar transparent in the first place.
+ */
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [lifted, setLifted] = useState(false);
+
+  useEffect(() => {
+    // IntersectionObserver rather than a scroll listener: one callback when
+    // the sentinel leaves the top, not work on every frame.
+    const sentinel = document.createElement("div");
+    sentinel.style.cssText = "position:absolute;top:0;height:8px;width:1px;";
+    document.body.prepend(sentinel);
+    const io = new IntersectionObserver(([e]) => setLifted(!e.isIntersecting), {
+      threshold: 0,
+    });
+    io.observe(sentinel);
+    return () => {
+      io.disconnect();
+      sentinel.remove();
+    };
+  }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-canopy/8 bg-vellum/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-10">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b bg-gallery/88 backdrop-blur-xl transition-colors duration-500 ${
+        lifted ? "border-[--color-line]" : "border-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
         <Link
           href="/"
-          className="font-display text-lg tracking-tight text-canopy"
           onClick={() => setOpen(false)}
+          className="text-[15px] font-semibold tracking-[-0.03em] text-[--color-ink]"
         >
           Lumatree
         </Link>
 
-        <nav className="hidden items-center gap-9 sm:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="font-sans text-[13px] font-medium text-canopy/70 transition-colors hover:text-canopy"
+              className="text-[13px] text-[#5c5c5c] transition-colors hover:text-[--color-ink]"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 sm:flex">
-          <CharButton href="/contact" variant="dark">
-            Contact
-          </CharButton>
+        <div className="hidden md:block">
+          <PillButton href="/contact">Enquire</PillButton>
         </div>
 
         <button
           type="button"
-          className="flex flex-col gap-1.5 text-canopy sm:hidden"
+          className="flex flex-col gap-[5px] text-[--color-ink] md:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
           <span
-            className={`h-px w-6 bg-current transition-transform ${open ? "translate-y-1.5 rotate-45" : ""}`}
+            className={`h-px w-6 bg-current transition-transform duration-300 ${open ? "translate-y-[6px] rotate-45" : ""}`}
           />
-          <span className={`h-px w-6 bg-current transition-opacity ${open ? "opacity-0" : ""}`} />
           <span
-            className={`h-px w-6 bg-current transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
+            className={`h-px w-6 bg-current transition-opacity duration-300 ${open ? "opacity-0" : ""}`}
+          />
+          <span
+            className={`h-px w-6 bg-current transition-transform duration-300 ${open ? "-translate-y-[6px] -rotate-45" : ""}`}
           />
         </button>
       </div>
 
       {open && (
-        <nav className="border-t border-canopy/8 bg-vellum px-6 py-6 sm:hidden">
-          <ul className="flex flex-col gap-5">
+        <nav className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-8 md:hidden">
+          <ul className="flex flex-col gap-6">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="font-sans text-sm font-medium text-canopy"
+                  className="text-lg tracking-[-0.02em] text-[--color-ink]"
                 >
                   {link.label}
                 </Link>
               </li>
             ))}
-            <li>
-              <CharButton href="/contact" variant="dark" className="mt-2">
-                Contact
-              </CharButton>
+            <li className="pt-2">
+              <PillButton href="/contact">Enquire</PillButton>
             </li>
           </ul>
         </nav>
