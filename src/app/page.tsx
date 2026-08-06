@@ -4,6 +4,7 @@ import FixtureCard from "@/components/fixture-card";
 import Reveal from "@/components/reveal";
 import PillButton from "@/components/pill-button";
 import { getAllProducts } from "@/lib/products";
+import { BAR, OPTIC } from "@/lib/brand";
 
 /**
  * Page theme: light throughout. The dark sections are full-bleed product
@@ -43,12 +44,14 @@ export default async function Home() {
           </div>
 
           <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            {/* The headline says the plain thing; the name arrives here. A
+                coined word in an h1 means nothing on first encounter. */}
             <p className="max-w-sm text-[14px] leading-relaxed text-white/60">
-              A wood-clad linear LED bar with deep-recessed optics, built in
-              six mounts.
+              {BAR}: a timber-clad linear LED bar with {OPTIC} recessed optics,
+              built in six mounts.
             </p>
             <div className="pointer-events-auto">
-              <PillButton href="/products" variant="onStage">
+              <PillButton href="/collection" variant="onStage">
                 See the range
               </PillButton>
             </div>
@@ -57,11 +60,11 @@ export default async function Home() {
       </FrameSequence>
 
       {/* 2. The figures behind the modularity claim. */}
-      <section className="bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-40">
+      <section className="bg-gallery px-6 py-28 lg:px-10 lg:py-40">
         <div className="mx-auto grid max-w-[1400px] gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-24">
           <Reveal>
-            <h2 className="max-w-[16ch] text-[clamp(2rem,4.2vw,3.6rem)] font-light leading-[1.04] tracking-[-0.04em] text-[--color-ink]">
-              The same extrusion, mounted six ways.
+            <h2 className="max-w-[16ch] text-[clamp(2rem,4.2vw,3.6rem)] font-light leading-[1.04] tracking-[-0.04em] text-ink">
+              One {BAR}, mounted six ways.
             </h2>
           </Reveal>
 
@@ -74,7 +77,7 @@ export default async function Home() {
               whole room rather than close enough.
             </p>
 
-            <dl className="mt-14 grid grid-cols-3 gap-8 border-t border-[--color-line] pt-8">
+            <dl className="mt-14 grid grid-cols-3 gap-8 border-t border-line pt-8">
               {[
                 ["6", "mounts"],
                 ["3", "finishes"],
@@ -82,7 +85,7 @@ export default async function Home() {
               ].map(([figure, label]) => (
                 <div key={label}>
                   <dt className="sr-only">{label}</dt>
-                  <dd className="figure text-[clamp(2.4rem,5vw,3.6rem)] leading-none text-[--color-ink]">
+                  <dd className="figure text-[clamp(2.4rem,5vw,3.6rem)] leading-none text-ink">
                     {figure}
                   </dd>
                   <p className="mt-3 text-[12px] text-[#6b6b6b]">{label}</p>
@@ -98,7 +101,7 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 px-6 pb-16 lg:px-10">
           <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <h2 className="max-w-[15ch] text-[clamp(1.9rem,3.6vw,3rem)] font-light leading-[1.06] tracking-[-0.035em] text-white">
-              The optics sit deep in the wood.
+              {OPTIC}. Each optic sits below the surface.
             </h2>
             <div className="flex gap-10">
               <div>
@@ -124,7 +127,7 @@ export default async function Home() {
       </FrameSequence>
 
       {/* 4. Dim-to-warm, operable rather than described. */}
-      <section className="bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-40">
+      <section className="bg-gallery px-6 py-28 lg:px-10 lg:py-40">
         <div className="mx-auto max-w-[1400px]">
           <Reveal>
             <DimToWarm />
@@ -143,10 +146,10 @@ export default async function Home() {
         </div>
       </FrameSequence>
 
-      <section className="bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-40">
+      <section className="bg-gallery px-6 py-28 lg:px-10 lg:py-40">
         <div className="mx-auto max-w-[1400px]">
           <Reveal>
-            <h2 className="text-[clamp(2rem,4.2vw,3.6rem)] font-light leading-[1.04] tracking-[-0.04em] text-[--color-ink]">
+            <h2 className="text-[clamp(2rem,4.2vw,3.6rem)] font-light leading-[1.04] tracking-[-0.04em] text-ink">
               The range.
             </h2>
           </Reveal>
@@ -166,14 +169,14 @@ export default async function Home() {
       </section>
 
       {/* 6. Close. */}
-      <section className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-40">
+      <section className="border-t border-line bg-gallery px-6 py-28 lg:px-10 lg:py-40">
         <div className="mx-auto max-w-[1400px]">
           <Reveal>
             <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
-              <h2 className="max-w-[18ch] text-[clamp(2rem,4.2vw,3.6rem)] font-light leading-[1.04] tracking-[-0.04em] text-[--color-ink]">
-                Specification sheets and lead times on request.
+              <h2 className="max-w-[18ch] text-[clamp(2rem,4.2vw,3.6rem)] font-light leading-[1.04] tracking-[-0.04em] text-ink">
+                Photometric files, spec sheets and finish samples.
               </h2>
-              <PillButton href="/contact">Enquire</PillButton>
+              <PillButton href="/specify">Specify</PillButton>
             </div>
           </Reveal>
         </div>

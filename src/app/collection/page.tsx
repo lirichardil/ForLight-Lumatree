@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import FixtureCard from "@/components/fixture-card";
 import Reveal from "@/components/reveal";
 import { getAllProducts } from "@/lib/products";
+import { BAR } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "The range. Lumatree",
-  description:
-    "Six mounts built from one wood-clad LED bar: Pendant, Wall, Floor Task, Table Task, Floor Wash and Table Wash.",
+  title: "The collection. Lumatree",
+  description: `Six mounts built from one ${BAR} bar: Pendant, Wall, Floor Task, Table Task, Floor Wash and Table Wash.`,
 };
 
 const FAMILIES = [
@@ -31,16 +31,16 @@ export default async function ProductsPage() {
   const products = await getAllProducts();
 
   return (
-    <div className="bg-[--color-gallery] px-6 pb-32 pt-40 lg:px-10">
+    <div className="bg-gallery px-6 pb-32 pt-40 lg:px-10">
       <div className="mx-auto max-w-[1400px]">
         <Reveal>
-          <h1 className="max-w-[14ch] text-[clamp(2.4rem,5.5vw,4.5rem)] font-light leading-[1.02] tracking-[-0.045em] text-[--color-ink]">
-            Six mounts, one bar.
+          <h1 className="max-w-[14ch] text-[clamp(2.4rem,5.5vw,4.5rem)] font-light leading-[1.02] tracking-[-0.045em] text-ink">
+            Six mounts, one {BAR}.
           </h1>
           <p className="mt-8 max-w-md text-[15px] leading-relaxed text-[#5c5c5c]">
             Grouped by how the light is used rather than by where it hangs.
-            Every fixture shares the same optics, the same CRI92 and the same
-            dim-to-warm behaviour.
+            Every fixture carries the same {BAR} bar, so the same optics, the
+            same CRI92 and the same dim-to-warm behaviour run through all six.
           </p>
         </Reveal>
 
@@ -53,7 +53,7 @@ export default async function ProductsPage() {
                   {/* No bottom rule here: each card carries its own top rule,
                       and both together read as a doubled hairline. */}
                   <div className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-baseline sm:justify-between">
-                    <h2 className="text-2xl tracking-[-0.035em] text-[--color-ink]">
+                    <h2 className="text-2xl tracking-[-0.035em] text-ink">
                       {family.name}
                     </h2>
                     <p className="text-[13px] text-[#5c5c5c]">{family.note}</p>

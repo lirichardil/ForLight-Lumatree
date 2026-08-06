@@ -23,8 +23,8 @@ export default function ContactForm({ productNames }: { productNames: string[] }
 
   if (status === "sent") {
     return (
-      <div className="border-t border-[--color-ink] pt-8">
-        <p className="text-2xl tracking-[-0.03em] text-[--color-ink]">
+      <div className="border-t border-ink pt-8">
+        <p className="text-2xl tracking-[-0.03em] text-ink">
           Message sent.
         </p>
         <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-[#5c5c5c]">
@@ -100,7 +100,7 @@ export default function ContactForm({ productNames }: { productNames: string[] }
       <button
         type="submit"
         disabled={status === "sending"}
-        className="group inline-flex w-fit items-center gap-2 rounded-full bg-[--color-ink] px-6 py-3 text-[13px] font-medium whitespace-nowrap text-[--color-gallery] transition-all duration-300 hover:bg-black active:scale-[0.98] disabled:opacity-55"
+        className="group inline-flex w-fit items-center gap-2 rounded-full bg-ink px-6 py-3 text-[13px] font-medium whitespace-nowrap text-gallery transition-all duration-300 hover:bg-black active:scale-[0.98] disabled:opacity-55"
       >
         {status === "sending" ? "Sending" : "Send enquiry"}
         <ArrowUpRight

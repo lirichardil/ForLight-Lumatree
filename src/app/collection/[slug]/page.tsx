@@ -5,6 +5,7 @@ import FixtureCard from "@/components/fixture-card";
 import Reveal from "@/components/reveal";
 import PillButton from "@/components/pill-button";
 import { getAllProducts, getProductBySlug } from "@/lib/products";
+import type { Product } from "@/lib/catalogue";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -26,7 +27,7 @@ export async function generateMetadata({
 }
 
 /** Grouped into three clusters rather than one long hairline-per-row table. */
-function specClusters(p: NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>) {
+function specClusters(p: Product) {
   return [
     {
       name: "Light",
@@ -51,7 +52,7 @@ function specClusters(p: NonNullable<Awaited<ReturnType<typeof getProductBySlug>
     },
     {
       name: "Control",
-      rows: (JSON.parse(p.control) as string[]).map((c) => [c, ""]),
+      rows: p.control.map((c) => [c, ""]),
     },
   ];
 }
@@ -65,7 +66,6 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const finishes = JSON.parse(product.finishes) as string[];
   const clusters = specClusters(product);
   const all = await getAllProducts();
   const others = all.filter((p) => p.slug !== product.slug).slice(0, 3);
@@ -121,10 +121,10 @@ export default async function ProductPage({
       </section>
 
       {/* Description plus finishes. */}
-      <section className="bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-36">
+      <section className="bg-gallery px-6 py-28 lg:px-10 lg:py-36">
         <div className="mx-auto grid max-w-[1400px] gap-16 lg:grid-cols-[1.1fr_1fr] lg:gap-24">
           <Reveal>
-            <p className="max-w-xl text-[clamp(1.15rem,2.1vw,1.6rem)] font-light leading-[1.45] tracking-[-0.02em] text-[--color-ink]">
+            <p className="max-w-xl text-[clamp(1.15rem,2.1vw,1.6rem)] font-light leading-[1.45] tracking-[-0.02em] text-ink">
               {product.description}
             </p>
           </Reveal>
@@ -132,10 +132,10 @@ export default async function ProductPage({
           <Reveal delay={0.1}>
             <h2 className="text-[13px] text-[#5c5c5c]">Finishes</h2>
             <ul className="mt-6 flex flex-col">
-              {finishes.map((finish) => (
+              {product.finishes.map((finish) => (
                 <li
                   key={finish}
-                  className="flex items-center gap-4 border-b border-[--color-line] py-4"
+                  className="flex items-center gap-4 border-b border-line py-4"
                 >
                   <span
                     className="h-8 w-14"
@@ -149,7 +149,7 @@ export default async function ProductPage({
                     }}
                     aria-hidden="true"
                   />
-                  <span className="text-[14px] text-[--color-ink]">{finish}</span>
+                  <span className="text-[14px] text-ink">{finish}</span>
                 </li>
               ))}
             </ul>
@@ -162,10 +162,10 @@ export default async function ProductPage({
       </section>
 
       {/* Specifications, clustered. */}
-      <section className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-28 lg:px-10 lg:py-36">
+      <section className="border-t border-line bg-gallery px-6 py-28 lg:px-10 lg:py-36">
         <div className="mx-auto max-w-[1400px]">
           <Reveal>
-            <h2 className="text-[clamp(1.8rem,3.4vw,2.8rem)] font-light tracking-[-0.04em] text-[--color-ink]">
+            <h2 className="text-[clamp(1.8rem,3.4vw,2.8rem)] font-light tracking-[-0.04em] text-ink">
               Specifications
             </h2>
           </Reveal>
@@ -173,14 +173,14 @@ export default async function ProductPage({
           <div className="mt-14 grid gap-12 md:grid-cols-3">
             {clusters.map((cluster, ci) => (
               <Reveal key={cluster.name} delay={ci * 0.08}>
-                <div className="bg-[--color-gallery-dim] p-8">
+                <div className="bg-gallery-dim p-8">
                   <h3 className="text-[13px] text-[#5c5c5c]">{cluster.name}</h3>
                   <dl className="mt-6 flex flex-col gap-5">
                     {cluster.rows.map(([label, value]) => (
                       <div key={label}>
                         <dt className="text-[12px] text-[#6b6b6b]">{label}</dt>
                         {value && (
-                          <dd className="figure mt-1 text-[14px] leading-snug text-[--color-ink]">
+                          <dd className="figure mt-1 text-[14px] leading-snug text-ink">
                             {value}
                           </dd>
                         )}
@@ -201,7 +201,7 @@ export default async function ProductPage({
       </section>
 
       {/* Rest of the range. */}
-      <section className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-28 lg:px-10">
+      <section className="border-t border-line bg-gallery px-6 py-28 lg:px-10">
         <div className="mx-auto max-w-[1400px]">
           <h2 className="text-[13px] text-[#5c5c5c]">Rest of the range</h2>
           <div className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-3">

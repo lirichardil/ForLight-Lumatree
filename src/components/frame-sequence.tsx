@@ -1,9 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SEQUENCES, allFramePaths, type SequenceId } from "@/lib/sequence";
+
+/** useLayoutEffect warns during server render; this component is SSR'd. */
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 type Props = {
   sequence: SequenceId;
@@ -73,7 +83,19 @@ export default function FrameSequence({
   }, [spec]);
 
   // --- pin, scrub, paint -----------------------------------------------------
-  useEffect(() => {
+  // Layout effect, not useEffect, and this is load-bearing.
+  //
+  // ScrollTrigger's `pin` reparents this section into a .pin-spacer div it
+  // generates. Only revert() puts it back. React runs useEffect cleanups in the
+  // passive unmount phase, which is *after* the mutation phase has already
+  // tried to removeChild the section from its original parent, so the section
+  // is still inside the spacer when React reaches for it: NotFoundError, the
+  // commit aborts, and the incoming route renders blank. Layout cleanups run
+  // synchronously during the mutation phase, before any node is removed.
+  //
+  // Symptom if this regresses: navigating away from any page with a pinned
+  // scene gives a white screen, not a visual glitch.
+  useIsoLayoutEffect(() => {
     if (!ready) return;
     const canvas = canvasRef.current;
     const wrap = wrapRef.current;

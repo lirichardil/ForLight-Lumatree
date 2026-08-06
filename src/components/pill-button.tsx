@@ -20,9 +20,9 @@ type Props = {
 
 const VARIANTS = {
   solid:
-    "bg-[--color-ink] text-[--color-gallery] hover:bg-black",
+    "bg-ink text-gallery hover:bg-black",
   quiet:
-    "border border-[--color-line] text-[--color-ink] hover:border-[--color-ink]",
+    "border border-line text-ink hover:border-ink",
   onStage:
     "border border-white/25 text-white hover:border-white/70 hover:bg-white/5",
 } as const;

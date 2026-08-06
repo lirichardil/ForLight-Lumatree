@@ -76,7 +76,7 @@ export default function DimToWarm() {
       </div>
 
       <div>
-        <h2 className="max-w-md text-3xl leading-[1.08] tracking-[-0.035em] text-[--color-ink] md:text-5xl">
+        <h2 className="max-w-md text-3xl leading-[1.08] tracking-[-0.035em] text-ink md:text-5xl">
           It gets warmer as it gets darker.
         </h2>
         <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#5c5c5c]">
@@ -91,7 +91,7 @@ export default function DimToWarm() {
             className="flex items-baseline justify-between text-[13px] text-[#5c5c5c]"
           >
             <span>Output</span>
-            <span className="figure text-[--color-ink]">
+            <span className="figure text-ink">
               {kelvin}K at {level}%
             </span>
           </label>
@@ -103,7 +103,7 @@ export default function DimToWarm() {
             value={level}
             onChange={(e) => setLevel(Number(e.target.value))}
             aria-label="Dim level, which also sets colour temperature"
-            className="mt-4 h-1 w-full cursor-pointer appearance-none rounded-full bg-[--color-gallery-dim] accent-[--color-ink] outline-offset-4"
+            className="mt-4 h-1 w-full cursor-pointer appearance-none rounded-full bg-gallery-dim accent-ink outline-offset-4"
             style={{
               background: `linear-gradient(90deg, ${blackbody(1800)} 0%, ${blackbody(2700)} 100%)`,
             }}

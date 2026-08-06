@@ -14,9 +14,12 @@ import PillButton from "@/components/pill-button";
  * ground is also the rule the rest of the site follows: the dark sections
  * are photographs, not a theme.
  *
- * Note bg-gallery/88 rather than bg-[--color-gallery]/88. Tailwind cannot
- * apply an opacity modifier to a raw var() colour and drops the declaration
- * silently, which is what made the bar transparent in the first place.
+ * Colours here use the @theme utilities (bg-gallery, text-ink), never the
+ * bg-[--color-gallery] form. Tailwind v3 read bg-[--x] as bg-[var(--x)]; v4
+ * dropped that shorthand in favour of bg-(--x) and now emits the value raw,
+ * so `background-color: --color-gallery` reaches the browser and is discarded.
+ * It type-checks, lints and builds — it just does nothing. That is what left
+ * this bar transparent with ink-coloured text over the dark hero.
  */
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -41,14 +44,14 @@ export default function SiteHeader() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b bg-gallery/88 backdrop-blur-xl transition-colors duration-500 ${
-        lifted ? "border-[--color-line]" : "border-transparent"
+        lifted ? "border-line" : "border-transparent"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="text-[15px] font-semibold tracking-[-0.03em] text-[--color-ink]"
+          className="text-[15px] font-semibold tracking-[-0.03em] text-ink"
         >
           Lumatree
         </Link>
@@ -58,7 +61,7 @@ export default function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[13px] text-[#5c5c5c] transition-colors hover:text-[--color-ink]"
+              className="text-[13px] text-[#5c5c5c] transition-colors hover:text-ink"
             >
               {link.label}
             </Link>
@@ -71,7 +74,7 @@ export default function SiteHeader() {
 
         <button
           type="button"
-          className="flex flex-col gap-[5px] text-[--color-ink] md:hidden"
+          className="flex flex-col gap-[5px] text-ink md:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -89,14 +92,14 @@ export default function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="border-t border-[--color-line] bg-[--color-gallery] px-6 py-8 md:hidden">
+        <nav className="border-t border-line bg-gallery px-6 py-8 md:hidden">
           <ul className="flex flex-col gap-6">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="text-lg tracking-[-0.02em] text-[--color-ink]"
+                  className="text-lg tracking-[-0.02em] text-ink"
                 >
                   {link.label}
                 </Link>
