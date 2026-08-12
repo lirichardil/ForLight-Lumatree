@@ -1,74 +1,48 @@
-import { prisma } from "@/lib/prisma";
-import { resolvePublicMedia } from "@/lib/media";
-import type { Product as StoredProduct } from "@/generated/prisma/client";
-import type { Family, FixtureType, Product } from "@/lib/catalogue";
+import type { Product } from "@/lib/catalogue";
 
 /**
- * The catalogue's only data-access seam.
+ * The catalogue's data-access seam.
  *
- * This is the single application module that knows Prisma exists. Everything
- * else imports the `Product` type from `@/lib/catalogue` and calls the
- * functions below, so replacing SQLite with the Shopify Storefront API is a
- * rewrite of this file and nothing else.
+ * Two interchangeable sources implement the same pair of functions:
  *
- * If you are that migration: keep these signatures, swap the bodies for
- * GraphQL queries, and delete `toProduct`'s JSON parsing (Shopify returns real
- * lists). Do not let a Shopify response type escape this module.
+ *   src/lib/sources/prisma.ts    local SQLite, the interim store
+ *   src/lib/sources/shopify.ts   Storefront API, the destination
  *
- * Keep the export surface minimal. Every exported function is a contract the
- * replacement has to honour.
+ * `CATALOGUE_SOURCE` picks between them at runtime. Seven files call these
+ * functions and none of them can tell which source answered — that is the
+ * whole point, and it is why the domain type in `@/lib/catalogue` is written
+ * by hand rather than derived from either backend.
+ *
+ * The switch is explicit rather than inferred from whether Shopify credentials
+ * happen to be present. Silently falling back to SQLite because a token was
+ * misspelled is exactly the kind of failure that reaches production looking
+ * like stale data.
+ *
+ * Imports are dynamic so the unused source is never loaded — in Shopify mode
+ * the Prisma client is not constructed at all. These functions are already
+ * async, so it costs nothing.
+ *
+ * To cut over: set CATALOGUE_SOURCE=shopify. To roll back: unset it. When the
+ * migration has held for a while, delete sources/prisma.ts, drop Prisma from
+ * package.json, and collapse this file into a re-export.
  */
 
-/**
- * Storage row to domain object.
- *
- * Three things happen here and all of them are the point: JSON columns become
- * arrays, media paths are resolved against /public, and Prisma's enum types
- * are narrowed to the app's own unions. Storage detail stops at this function.
- */
-function toProduct(row: StoredProduct): Product {
-  const gallery = (JSON.parse(row.gallery) as string[])
-    .map(resolvePublicMedia)
-    .filter((src): src is string => Boolean(src));
+export type CatalogueSource = "prisma" | "shopify";
 
-  return {
-    id: row.id,
-    slug: row.slug,
-    name: row.name,
-    family: row.family as Family,
-    type: row.type as FixtureType,
-    tagline: row.tagline,
-    description: row.description,
+export function catalogueSource(): CatalogueSource {
+  return process.env.CATALOGUE_SOURCE === "shopify" ? "shopify" : "prisma";
+}
 
-    profileMm: row.profileMm,
-    litLengthMm: row.litLengthMm,
-    overallMm: row.overallMm,
-    baseMm: row.baseMm,
-
-    watts: row.watts,
-    lumens: row.lumens,
-    beamAngle: row.beamAngle,
-    ugr: row.ugr,
-    cri: row.cri,
-    kelvin: row.kelvin,
-    weightKg: row.weightKg,
-
-    control: JSON.parse(row.control) as string[],
-    finishes: JSON.parse(row.finishes) as string[],
-
-    heroImage: resolvePublicMedia(row.heroImage),
-    gallery,
-
-    updatedAt: row.updatedAt,
-  };
+async function source() {
+  return catalogueSource() === "shopify"
+    ? import("@/lib/sources/shopify")
+    : import("@/lib/sources/prisma");
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-  const rows = await prisma.product.findMany({ orderBy: { sortOrder: "asc" } });
-  return rows.map(toProduct);
+  return (await source()).getAllProducts();
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const row = await prisma.product.findUnique({ where: { slug } });
-  return row ? toProduct(row) : null;
+  return (await source()).getProductBySlug(slug);
 }

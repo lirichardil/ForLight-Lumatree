@@ -43,17 +43,21 @@ const eslintConfig = defineConfig([
     /**
      * The catalogue data-access seam.
      *
-     * `src/lib/products.ts` is the only application module allowed to know a
-     * database exists. Everything else imports the `Product` type from
-     * `src/lib/catalogue.ts`, which keeps the eventual move to the Shopify
-     * Storefront API contained to one file.
+     * `src/lib/sources/prisma.ts` is the only application module allowed to
+     * know a database exists. Everything else imports the `Product` type from
+     * `src/lib/catalogue.ts` and calls `src/lib/products.ts`, which picks a
+     * source at runtime. That is what keeps the Shopify migration to one file.
      *
-     * A comment saying so is not enough — the previous version leaked Prisma's
+     * A comment saying so is not enough — an earlier version leaked Prisma's
      * generated type into every component that rendered a fixture, and nothing
      * caught it. This does.
      */
     files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/lib/prisma.ts", "src/lib/products.ts", "src/generated/**"],
+    ignores: [
+      "src/lib/prisma.ts",
+      "src/lib/sources/prisma.ts",
+      "src/generated/**",
+    ],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -62,7 +66,7 @@ const eslintConfig = defineConfig([
             {
               group: ["@/generated/prisma", "@/generated/prisma/*", "@/lib/prisma"],
               message:
-                "Only src/lib/products.ts may touch the database. Import the Product type from @/lib/catalogue and call the functions in @/lib/products.",
+                "Only src/lib/sources/prisma.ts may touch the database. Import the Product type from @/lib/catalogue and call the functions in @/lib/products.",
             },
           ],
         },

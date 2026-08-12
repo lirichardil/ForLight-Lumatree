@@ -2,6 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /**
+   * Product imagery is served from the Shopify CDN once CATALOGUE_SOURCE is
+   * shopify. Without this, next/image rejects those URLs outright.
+   */
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "cdn.shopify.com" }],
+  },
+
+  /**
    * The 2026 restructure renamed three routes. 308 rather than 307 so search
    * engines transfer ranking to the new URLs instead of treating the move as
    * temporary, and so the method is preserved.
