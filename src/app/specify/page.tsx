@@ -3,6 +3,9 @@ import Reveal from "@/components/reveal";
 import PillButton from "@/components/pill-button";
 import { getAllProducts } from "@/lib/products";
 import { BAR, OPTIC, UGR_FAMILIES } from "@/lib/brand";
+import { SAMPLES } from "@/lib/shop";
+
+const SAMPLE_SET = SAMPLES[0];
 
 export const metadata: Metadata = {
   title: "Specify. Lumatree",
@@ -204,6 +207,24 @@ export default async function SpecifyPage() {
                 narrow enough that grain scale matters. Ask for the set before
                 committing a specification.
               </p>
+
+              {/* The set is offcuts of the real profile rather than flat
+                  swatches, so it shows the recess depth and not just the
+                  grain. Defined in src/lib/shop.ts, which is also where it
+                  becomes the first purchasable product. */}
+              {SAMPLE_SET?.contents && (
+                <ul className="mt-8 flex flex-col">
+                  {SAMPLE_SET.contents.map((item) => (
+                    <li
+                      key={item}
+                      className="border-b border-line py-3 text-[13px] text-[#5c5c5c]"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               <div className="mt-10">
                 <PillButton href="/contact" variant="quiet">
                   Request samples

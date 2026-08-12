@@ -6,6 +6,7 @@ import Reveal from "@/components/reveal";
 import PillButton from "@/components/pill-button";
 import { getAllProducts, getProductBySlug } from "@/lib/products";
 import type { Product } from "@/lib/catalogue";
+import { quoteReason } from "@/lib/commerce";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -67,6 +68,7 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const clusters = specClusters(product);
+  const reason = quoteReason(product.slug);
   const all = await getAllProducts();
   const others = all.filter((p) => p.slug !== product.slug).slice(0, 3);
 
@@ -192,9 +194,20 @@ export default async function ProductPage({
             ))}
           </div>
 
+          {/* Quoted fixtures say why. A bare Enquire where the rest of the
+              range will carry a price reads as evasion; naming the measurement
+              we need turns it into a reason. Direct fixtures get the cart
+              button here once Shopify is connected — see src/lib/commerce.ts. */}
           <Reveal>
-            <div className="mt-16">
-              <PillButton href="/contact">Enquire</PillButton>
+            <div className="mt-16 flex flex-col gap-5">
+              {reason && (
+                <p className="max-w-md border-l border-line pl-5 text-[13px] leading-relaxed text-[#6b6b6b]">
+                  {reason}
+                </p>
+              )}
+              <PillButton href="/contact" className="w-fit">
+                Enquire
+              </PillButton>
             </div>
           </Reveal>
         </div>
