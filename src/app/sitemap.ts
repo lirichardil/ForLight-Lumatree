@@ -3,6 +3,9 @@ import { getAllProducts } from "@/lib/products";
 import { SITE_URL } from "@/lib/site";
 import { hasProjects } from "@/lib/projects";
 
+/** Already prerendered; stated explicitly so STATIC_EXPORT builds accept it. */
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = await getAllProducts();
 
