@@ -1,5 +1,6 @@
 import Link from "next/link";
 import FixtureDiagram from "@/components/fixture-diagram";
+import { compactBeam, compactFigure } from "@/lib/figures";
 import type { Product } from "@/lib/catalogue";
 
 const FAMILY_LABEL: Record<string, string> = {
@@ -47,19 +48,19 @@ export default function FixtureCard({
         <div>
           <dt className="text-[11px] text-[#6b6b6b]">Output</dt>
           <dd className="figure mt-1 text-[13px] text-ink">
-            {product.lumens.split(" ")[0]} lm
+            {compactFigure(product.lumens)} lm
           </dd>
         </div>
         <div>
           <dt className="text-[11px] text-[#6b6b6b]">Load</dt>
           <dd className="figure mt-1 text-[13px] text-ink">
-            {product.watts.split(" ")[0]} W
+            {compactFigure(product.watts)} W
           </dd>
         </div>
         <div>
           <dt className="text-[11px] text-[#6b6b6b]">Beam</dt>
           <dd className="figure mt-1 text-[13px] text-ink">
-            {product.beamAngle.split(",")[0]}
+            {compactBeam(product.beamAngle)}
           </dd>
         </div>
       </dl>

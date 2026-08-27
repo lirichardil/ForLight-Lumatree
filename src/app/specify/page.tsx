@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { compactFigure } from "@/lib/figures";
 import Reveal from "@/components/reveal";
 import PillButton from "@/components/pill-button";
 import { getAllProducts } from "@/lib/products";
@@ -161,7 +162,7 @@ export default async function SpecifyPage() {
                       {product.name}
                     </p>
                     <p className="figure mt-1 text-[11px] text-[#6b6b6b]">
-                      {product.lumens.split(" ")[0]} lm
+                      {compactFigure(product.lumens)} lm
                       {product.ugr ? ` · UGR${product.ugr}` : ""}
                     </p>
                   </div>

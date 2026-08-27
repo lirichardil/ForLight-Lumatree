@@ -7,6 +7,7 @@ import PillButton from "@/components/pill-button";
 import { getAllProducts, getProductBySlug } from "@/lib/products";
 import type { Product } from "@/lib/catalogue";
 import { quoteReason } from "@/lib/commerce";
+import { compactFigure, withUnit } from "@/lib/figures";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -33,9 +34,9 @@ function specClusters(p: Product) {
     {
       name: "Light",
       rows: [
-        ["Output", `${p.lumens} lm`],
-        ["Load", `${p.watts} W`],
-        ["Beam angle", `${p.beamAngle} degrees`],
+        ["Output", withUnit(p.lumens, "lm")],
+        ["Load", withUnit(p.watts, "W")],
+        ["Beam angle", withUnit(p.beamAngle, "degrees")],
         ["Colour rendering", `CRI ${p.cri}`],
         ...(p.ugr !== null ? [["Glare", `UGR ${p.ugr}`]] : []),
         ["Colour temperature", p.kelvin],
@@ -44,11 +45,11 @@ function specClusters(p: Product) {
     {
       name: "Body",
       rows: [
-        ["Profile", `${p.profileMm} mm`],
-        ["Emitting length", `${p.litLengthMm} mm`],
+        ["Profile", withUnit(p.profileMm, "mm")],
+        ["Emitting length", withUnit(p.litLengthMm, "mm")],
         ["Overall", p.overallMm],
-        ...(p.baseMm ? [["Base", `${p.baseMm} mm`]] : []),
-        ["Weight", `${p.weightKg} kg`],
+        ...(p.baseMm ? [["Base", withUnit(p.baseMm, "mm")]] : []),
+        ["Weight", withUnit(p.weightKg, "kg")],
       ],
     },
     {
@@ -90,14 +91,14 @@ export default async function ProductPage({
                 <div>
                   <dt className="text-[11px] text-white/45">Output</dt>
                   <dd className="figure mt-2 text-lg text-white">
-                    {product.lumens.split(" ")[0]}
+                    {compactFigure(product.lumens)}
                     <span className="text-[11px] text-white/45"> lm</span>
                   </dd>
                 </div>
                 <div>
                   <dt className="text-[11px] text-white/45">Load</dt>
                   <dd className="figure mt-2 text-lg text-white">
-                    {product.watts.split(" ")[0]}
+                    {compactFigure(product.watts)}
                     <span className="text-[11px] text-white/45"> W</span>
                   </dd>
                 </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { compactFigure } from "@/lib/figures";
 import Link from "next/link";
 import FixtureDiagram from "@/components/fixture-diagram";
 import Reveal from "@/components/reveal";
@@ -174,8 +175,8 @@ export default async function SpacesPage() {
                         />
                       </div>
                       <p className="figure mt-4 text-[12px] text-[#6b6b6b]">
-                        {product.lumens.split(" ")[0]} lm ·{" "}
-                        {product.watts.split(" ")[0]} W
+                        {compactFigure(product.lumens)} lm ·{" "}
+                        {compactFigure(product.watts)} W
                         {product.ugr ? ` · UGR${product.ugr}` : ""}
                       </p>
                     </Link>
