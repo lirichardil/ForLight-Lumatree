@@ -6,18 +6,18 @@
 
 ## 1. 这个项目是什么
 
-Lumatree 是一个木质线性 LED 灯具品牌：**一根共用灯条（Kanon），六种安装方式**。
+
 
 网站已经建好并在运行，是一个 **Next.js 应用**，包含滚动驱动的固定舞台动画和逐帧序列。这部分不会迁移到 Shopify。
 
 架构是 **headless（无头）**：
 
 ```
-用户看到的域名     lumatree.com            → Next.js 前端（Vercel 等）
+用户看到的域名     xxx.com            → Next.js 前端（Vercel 等）
                         ↓ Storefront API (GraphQL)
 商品 / 库存 / 价格  Shopify 后台            ← 本文档的范围
                         ↓ 点击结账时跳转
-结账 / 支付 / 税费  checkout.lumatree.com   → Shopify 托管结账
+结账 / 支付 / 税费  checkout.   .com   → Shopify 托管结账
 ```
 
 **请注意：Next.js 前端无法托管在 Shopify 上。** 不要按 Liquid 主题或 Hydrogen 的思路规划——前端已经存在，只需要 Shopify 作为商品与订单后端。
@@ -77,7 +77,7 @@ Lumatree 是一个木质线性 LED 灯具品牌：**一根共用灯条（Kanon�
 
 ## 4. Metafields 定义
 
-### ⚠️ 最容易出错的一步
+### 最容易出错的一步
 
 每个 metafield 都必须**对 Storefront API 开放访问**。
 在 Shopify 后台定义 metafield 时，需要勾选 "Storefront API 访问 / Expose to Storefront API"。
@@ -112,7 +112,7 @@ Lumatree 是一个木质线性 LED 灯具品牌：**一根共用灯条（Kanon�
 
 ## 5. 六个型号的完整数据
 
-以下数值全部转录自厂方规格表。**请勿修改或凑整。**
+以下数值全部转录自厂方规格表。
 
 ### 5.1 Pendant 吊灯 —— 询价
 
@@ -336,9 +336,9 @@ Shopify 每个商品的选项数量有上限（历史为 3 个，请按实际套
 
 ### 自定义结账域名（重要）
 
-配置 `checkout.lumatree.com` 指向 Shopify，**不要使用默认的 `xxx.myshopify.com`**。
+配置 `checkout.x xxcom` 指向 Shopify，**不要使用默认的 `xxx.myshopify.com`**。
 
-真正损害信任的是付款时域名突然变成陌生地址，而非页面版式的差异。域名一致，用户感知上就是同一个系统。
+
 
 ### 结账品牌化
 
@@ -361,7 +361,7 @@ Shopify 每个商品的选项数量有上限（历史为 3 个，请按实际套
    所需权限：`unauthenticated_read_product_listings`
    （后续做购物车时需追加 `unauthenticated_write_checkouts`）
 
-2. **店铺域名**，形如 `lumatree.myshopify.com`
+2. **店铺域名**，形如 `xxx.myshopify.com`
 
 3. **确认使用的 API 版本**（Shopify 按季度发版，每版支持 12 个月）
 
