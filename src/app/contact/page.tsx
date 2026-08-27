@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ContactForm from "@/components/contact-form";
 import Reveal from "@/components/reveal";
 import { getAllProducts } from "@/lib/products";
+import { ENQUIRY_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Enquire. Lumatree",
@@ -29,7 +30,9 @@ export default async function ContactPage() {
             <div>
               <dt className="text-[12px] text-[#6b6b6b]">Enquiries</dt>
               <dd className="mt-1 text-[14px] text-ink">
-                hello@lumatree.com
+                <a href={`mailto:${ENQUIRY_EMAIL}`} className="underline underline-offset-4">
+                  {ENQUIRY_EMAIL}
+                </a>
               </dd>
             </div>
             <div>
